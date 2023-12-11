@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="style.css" rel="stylesheet">
+    <title>Dual Care</title>
+</head>
+<body>
+    <section id="heading">
+        <h1>Dual Care</h1>
+    </section>
+    <section id="scene">
+        <img id="scene-img" src="media/day_scene.png" alt="day scene of living room">
+        <img id="table-img" src="media/table.png" alt="table image">
+        <img id="feet-down-img" src="media/feet-down.png" alt="feet down">
+        <img id="feet-up-img" src="media/feet-up.png" alt="feet up">
+        <img id="mug1" src="media/day_mug.png" alt="mug image">
+        <img id="mug2" src="media/day_mug.png" alt="mug image">
+        <img id="mug3" src="media/day_mug.png" alt="mug image">
+        <section id="person-action-sect">
+            <p>What would you like to do today?</p>
+            <br>
+            <button id="drink">Drink coffee/tea</button>
+            <button id="feet">Rest feet on table</button>
+            <!-- <button id="move-out">Move out of residence</button> -->
+        </section>
+        <section id="table-action-sect">
+            <img id="night-button" src="media/night-button.png" alt="night button image">
+            <!-- <img id="day-button" src="media/day-button.png" alt="day button image"> -->
+            <button id="lights-button">Turn lights on</button>
+        </section>
+        <section id="table-talks">
+        </section>
+        <section id="chats-sect">
+        </section>
+        <section id="manual">
+        </section>
+        <div class="cursor">
+            <br>
+            <p>Resident</p>
+        </div>
+    </section>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
