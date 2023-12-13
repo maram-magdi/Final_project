@@ -69,6 +69,7 @@ window.addEventListener('load', (event) => {
             img.style.visibility = "hidden";
             close.style.visibility = "hidden";
             let audio = new Audio ('media/music.mp4');
+            audio.loop = true;
             audio.play();
         });
 
