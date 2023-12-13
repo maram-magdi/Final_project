@@ -279,12 +279,17 @@ h1 {
 
 button {
   cursor: pointer;
-  padding: 5px;
+  padding: 7px;
   margin: 1px;
   border: transparent;
-  border-radius: 7%;
+  border-radius: 12px;
   color: #ffffff;
   background-color: rgba(43, 43, 43, 0.647);
+}
+
+.button-active {
+  color: rgba(43, 43, 43, 0.647);
+  background-color: #ffffff;
 }
 
 .cursors-container {

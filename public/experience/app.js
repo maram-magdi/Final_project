@@ -3,6 +3,8 @@
 let drinkBttn = document.getElementById('drink');
 let wantToDrink = false;
 let mug1 = document.getElementById('mug1');
+// let mug2 = document.getElementById('mug2');
+// let mug3 = document.getElementById('mug3');
 
 let moveOutBttn = document.getElementById('move-out');
 
@@ -32,6 +34,7 @@ let manual = document.getElementById('manual');
 let eventCounter = 0;
 let residentsCounter;
 
+let residentsObjArray;
 
 window.addEventListener('load', (event) => {
     
@@ -65,6 +68,26 @@ window.addEventListener('load', (event) => {
             manual.style.visibility = "hidden";
             img.style.visibility = "hidden";
             close.style.visibility = "hidden";
+            let audio = new Audio ('media/music.mp4');
+            audio.play();
+        });
+
+
+        socket.on('residentsIn', (data) => {
+            // console.log(data);
+    
+            residentsObjArray = Object.keys(data);
+            console.log(residentsObjArray);
+            let notify = document.createElement('p');
+    
+            if (residentsObjArray.length == 1) {
+                notify.innerHTML = "There is " + residentsObjArray.length + " resident in the living room!";
+            } else {
+                notify.innerHTML = "There are " + residentsObjArray.length + " residents in the living room!";
+            };
+            notify.classList.add('count');
+            chatsSect.appendChild(notify);
+    
         });
 
         socket.on('nightBttnDataE', (data) => {
@@ -91,6 +114,9 @@ window.addEventListener('load', (event) => {
                     sceneImg.src="media/day_scene.png";
                     tableImg.src="media/table.png";
                     day = true;
+                    areLightsOn = false;
+                    lightsBttn.innerHTML="Turn on lights";
+                    lightsBttn.classList.remove('button-active');
                     lightsBttn.style.visibility = "hidden";
         
                     lightsBttn.removeEventListener('click', turnOnLights);
@@ -104,7 +130,8 @@ window.addEventListener('load', (event) => {
 
             //extracting info data into variables
             let feetDownLive = data.feetBttnClickStat;
-            feetDown = feetDownLive;
+            console.log(feetDownLive);
+            // feetDown = feetDownLive;
             let wantToDrinkLive = data.drinkBttnClickStat;
             wantToDrink = wantToDrinkLive;
             let areLightsOnLive = data.areLightsOn;
@@ -115,34 +142,47 @@ window.addEventListener('load', (event) => {
                 feetDownImg.style.visibility = "hidden";
                 feetUpImg.style.visibility = "visible";
                 feetBttn.innerHTML = "Remove feet from table";
+                feetBttn.classList.add('button-active');
+
             } else if (feetDownLive == false){
                 feetDown = true;
                 feetDownImg.style.visibility = "visible";
                 feetUpImg.style.visibility = "hidden";
                 feetBttn.innerHTML = "Rest feet on table";
+                feetBttn.classList.remove('button-active');
+
             };
 
             
             if(wantToDrinkLive == true){
                 wantToDrink = false;
+
                 mug1.style.visibility = "visible";
+
+                drinkBttn.innerHTML = "Remove coffee/tea mugs";
+                drinkBttn.classList.add('button-active');
 
             } else if (wantToDrinkLive == false){
                 wantToDrink = true;
+
                 mug1.style.visibility = "hidden";
 
+                drinkBttn.innerHTML = "Drink coffee/tea";
+                drinkBttn.classList.remove('button-active');
             };
 
             if(areLightsOn == false && day == false){
                 sceneImg.src="media/lights_scene.png";
                 tableImg.src="media/lights-table.png";
                 lightsBttn.innerHTML="Turn off lights";
+                lightsBttn.classList.add('button-active');
                 areLightsOn = true;
             } else if (areLightsOn == true && day == false){
                 areLightsOn = false;
                 sceneImg.src="media/night_scene.png";
                 tableImg.src="media/night-table.png";
                 lightsBttn.innerHTML="Turn on lights";
+                lightsBttn.classList.remove('button-active');
             };
         });
 
@@ -174,6 +214,7 @@ window.addEventListener('load', (event) => {
             feetDownImg.style.visibility = "hidden";
             feetUpImg.style.visibility = "visible";
             feetBttn.innerHTML = "Remove feet from table"
+            feetBttn.classList.add('button-active');
             let message = document.createElement('p');
             message.innerHTML = "HEY! I am made of harmful substances that may lead to cancer, so please handle me with CARE!";
             // chatsSect.appendChild(message);
@@ -190,7 +231,8 @@ window.addEventListener('load', (event) => {
             feetDown = true;
             feetDownImg.style.visibility = "visible";
             feetUpImg.style.visibility = "hidden";
-            feetBttn.innerHTML = "Rest feet on table"
+            feetBttn.innerHTML = "Rest feet on table";
+            feetBttn.classList.remove('button-active');
             let message = document.createElement('p');
             message.innerHTML = "Thank you!";
             // chatsSect.appendChild(message);
@@ -307,6 +349,9 @@ window.addEventListener('load', (event) => {
                 sceneImg.src="media/day_scene.png";
                 tableImg.src="media/table.png";
                 day = true;
+                areLightsOn = false;
+                lightsBttn.innerHTML="Turn on lights";
+                lightsBttn.classList.remove('button-active');
                 lightsBttn.style.visibility = "hidden";
                 let message = document.createElement('p');
                 message.innerHTML = "Yay, the sun is up!";
@@ -339,6 +384,7 @@ window.addEventListener('load', (event) => {
             sceneImg.src="media/lights_scene.png";
             tableImg.src="media/lights-table.png";
             lightsBttn.innerHTML="Turn off lights";
+            lightsBttn.classList.add('button-active');
             let message = document.createElement('p');
             message.innerHTML = "Thank you!";
             // chatsSect.appendChild(message);
@@ -357,6 +403,7 @@ window.addEventListener('load', (event) => {
             sceneImg.src="media/night_scene.png";
             tableImg.src="media/night-table.png";
             lightsBttn.innerHTML="Turn on lights";
+            lightsBttn.classList.remove('button-active');
             let message = document.createElement('p');
             message.innerHTML = "Please put me where there is light! I also like the warmth of the light rays on my body.";
             // chatsSect.appendChild(message);
@@ -386,8 +433,12 @@ window.addEventListener('load', (event) => {
         if(wantToDrink == true){
             wantToDrink = false;
 
+      
             mug1.style.visibility = "visible";
+
+
             drinkBttn.innerHTML = "Remove coffee/tea mugs";
+            drinkBttn.classList.add('button-active');
             let message = document.createElement('p');
             message.innerHTML = "Don't leave mugs on me for too long. My skin will blemish and stain!";
             // chatsSect.appendChild(message);
@@ -416,8 +467,11 @@ window.addEventListener('load', (event) => {
 
         } else if (wantToDrink == false){
             wantToDrink = true;
+
             mug1.style.visibility = "hidden";
+            
             drinkBttn.innerHTML = "Drink coffee/tea";
+            drinkBttn.classList.remove('button-active');
             let message = document.createElement('p');
             message.innerHTML = "Thanks for decluttering me!";
             // chatsSect.appendChild(message);
@@ -519,21 +573,5 @@ window.addEventListener('load', (event) => {
     // })
     
 
-    socket.on('residentsIn', (data) => {
-        // console.log(data);
-
-        let residentsObjArray = Object.keys(data);
-        console.log(residentsObjArray);
-        let notify = document.createElement('p');
-
-        if (residentsObjArray.length == 1) {
-            notify.innerHTML = "There is " + residentsObjArray.length + " resident in the living room!";
-        } else {
-            notify.innerHTML = "There are " + residentsObjArray.length + " residents in the living room!";
-        };
-        notify.classList.add('count');
-        chatsSect.appendChild(notify);
-
-    });
     // chatsSect.innerHTML = "";
 })

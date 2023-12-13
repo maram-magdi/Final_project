@@ -50,7 +50,9 @@ io.on('connection', (socket) => {
     residents[socket.id] = {x: 0, y:0};
     // residentsIn.push(socket.id);
     // console.log(residents);
+
     console.log(residentsCounter);
+
     // io.to(socket.id).emit(socket.id);
 
     // if (counter > 1){
@@ -65,10 +67,10 @@ io.on('connection', (socket) => {
     //     beforeResidentsCounter = residentsCounter;
     // };
 
-    if(eventCounter > 0){
+    // if(eventCounter > 0){
         io.to(socket.id).emit('nightBttnDataE', nightBttnData);
         io.to(socket.id).emit('liveDataE', liveData);
-    };
+    // };
 
     io.to(socket.id).emit('residentsLive', residents);
     // io.emit('residentJoined', residentsCounter);
@@ -127,7 +129,7 @@ io.on('connection', (socket) => {
 
         residents[socket.id] = mousePos;
 
-        console.log(residents);
+        // console.log(residents);
 
         io.emit('residentsLive', residents);
     })
