@@ -4,8 +4,8 @@ let app = express();
 let http = require('http');
 let server= http.createServer(app);
 
-app.use('/', express.static('public/main'));
-app.use('/experience', express.static('public/experience'));
+app.use('/', express.static('public/experience'));
+// app.use('/experience', express.static('public/experience'));
 
 let port = process.env.PORT || 3000;
 server.listen(port, () => (
@@ -29,13 +29,56 @@ let nightBttnData = {
     day: true
 };
 
+let residents = {
+    //user key will be user id
+    //value of key is another object - mouse position
+    // "socket.id": {
+    //     x: 0,
+    //     y: 0
+    // }
+};
+
+// let residentsIn = [];
+
+let eventCounter = 0;
+let beforeResidentsCounter = 0;
+let residentsCounter = 0;
+
 io.on('connection', (socket) => {
     console.log('Client connected: ' + socket.id);
+    residentsCounter++;
+    residents[socket.id] = {x: 0, y:0};
+    // residentsIn.push(socket.id);
+    // console.log(residents);
+    console.log(residentsCounter);
+    // io.to(socket.id).emit(socket.id);
 
-    io.to(socket.id).emit('feetBttnClick', liveData.feetBttnClickStat);
-    io.to(socket.id).emit('nightBttnClick', nightBttnData);
-    io.to(socket.id).emit('lightBttnClick', liveData.areLightsOn);
-    io.to(socket.id).emit('drinkBttnClick', liveData.drinkBttnClickStat);
+    // if (counter > 1){
+    //     io.to(socket.id).emit('feetBttnClick', liveData.feetBttnClickStat);
+    //     io.to(socket.id).emit('nightBttnClick', nightBttnData);
+    //     io.to(socket.id).emit('lightBttnClick', liveData.areLightsOn);
+    //     io.to(socket.id).emit('drinkBttnClick', liveData.drinkBttnClickStat);
+    // };
+
+    // if(residentsCounter != beforeResidentsCounter){
+    //     io.emit('residentsLive', residentsCounter);
+    //     beforeResidentsCounter = residentsCounter;
+    // };
+
+    if(eventCounter > 0){
+        io.to(socket.id).emit('nightBttnDataE', nightBttnData);
+        io.to(socket.id).emit('liveDataE', liveData);
+    };
+
+    io.to(socket.id).emit('residentsLive', residents);
+    // io.emit('residentJoined', residentsCounter);
+    io.emit('residentsIn', residents);
+
+
+
+    // io.to(socket.id).emit('nightBttnDataE', nightBttnData);
+    // io.to(socket.id).emit('liveDataE', liveData);
+
 
     // io.emit('feetBttnClick', liveData.feetBttnClickStat);
     // io.emit('nightBttnClick', liveData.day);
@@ -44,6 +87,7 @@ io.on('connection', (socket) => {
     socket.on('feetBttnClick', (data) => {
         console.log("Feet button click: " + data);
         liveData.feetBttnClickStat = data;
+        eventCounter++;
 
         io.emit('feetBttnClick', liveData.feetBttnClickStat);
     });
@@ -55,22 +99,49 @@ io.on('connection', (socket) => {
         liveData.day = data.day;
         nightBttnData.day = data.dayState;
 
+        eventCounter++;
+
         io.emit('nightBttnClick', nightBttnData);
     });
 
     socket.on('lightBttnClick', (data) => {
         liveData.areLightsOn = data;
         console.log(liveData.areLightsOn);
+
+        eventCounter++;
+
         io.emit('lightBttnClick', liveData.areLightsOn);
     });
 
     socket.on('drinkBttnClick', (data) => {
         liveData.drinkBttnClickStat = data;
         // console.log("Drink button click " + liveData.drinkBttnClickStat);
+
+        eventCounter++;
+
         io.emit('drinkBttnClick', liveData.drinkBttnClickStat);
     });
 
+    socket.on('mousemove', (mousePos) => {
+        // console.log(socket.id, mousePos);
+
+        residents[socket.id] = mousePos;
+
+        console.log(residents);
+
+        io.emit('residentsLive', residents);
+    })
+
     socket.on('disconnect', () => {
         console.log('Client ' + socket.id + " left");
+        residentsCounter--;
+
+        delete residents[socket.id];
+
+        // if(residentsCounter != beforeResidentsCounter){
+        //     io.emit('residentsLive', residentsCounter);
+        //     beforeResidentsCounter = residentsCounter;
+        // };
+        io.emit('residentsIn', residents);
     });
 })
