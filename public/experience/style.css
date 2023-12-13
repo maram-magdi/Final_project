@@ -195,9 +195,11 @@ h1 {
 .messages {
   background-color: white;
   margin: 3px;
-  padding: 3px;
+  padding: 3px 5px;
   width: 80%;
   height: auto;
+  border-color: transparent;
+  border-radius: 8px;
 }
 
 .message-line {
